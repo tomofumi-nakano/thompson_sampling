@@ -12,6 +12,14 @@ function rbeta($aa, $bb)
     static $beta;
     static $gamma;
 
+    if ($aa < 1 || $bb < 1) {
+        throw new InvalidArgumentException('Arguments must be more than equal 1.', 10);
+    }                 
+
+    if (($aa == 1) && ($bb == 1)) {
+        return mt_rand()/mt_getrandmax();
+    }
+
     $a = min($aa, $bb);
     $b = max($aa, $bb); /* a <= b */
     $alpha = $a + $b;
@@ -23,16 +31,17 @@ function rbeta($aa, $bb)
         $olda = $aa; $oldb = $bb;
     }
 
+    $m = mt_getrandmax();
 	do {
-	    $u1 = mt_rand()/mt_getrandmax();
-	    $u2 = mt_rand()/mt_getrandmax();
+	    $u1 = mt_rand()/$m;
+	    $u2 = mt_rand()/$m;
 
 	    $v = $beta * log($u1 / (1.0 - $u1));
 	    if ($v <= 709) {
             $w = $a * exp($v);
-            if ($w == INF) {$w = 1.8e308;}
+            if ($w == INF) {$w = 1.75e308;}
         } else {
-            $w = 1.8e308;
+            $w = 1.75e308;
         }
 
 	    $z = $u1 * $u1 * $u2;
