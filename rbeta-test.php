@@ -1,17 +1,12 @@
 <?php
 
 require_once 'rbeta.php';
- 
+
 class RBetaTest extends PHPUnit_Framework_TestCase
 {
     private $member = null;
- 
-//    public function setup()
-//    {
-//#        $this->member = new Member();
-//    }
- 
-    public function test_plot_x10000()
+
+    public function test_plot_and_accuracy()
     {
         $rep = 1000000;
         $div = 40;
@@ -32,8 +27,9 @@ class RBetaTest extends PHPUnit_Framework_TestCase
             $expect_min = min($lower, $mid, $upper);
             print $i." = " . $hist[$i] . "(".($expect*$rep/$div).")\n";
             $this->assertLessThan($hist[$i], $expect_min*0.99*$rep/$div-1);
-            $this->assertLessThan($expect_max*1.01*$rep/$div+1, $hist[$i]);
+            $this->assertGreaterThan($hist[$i], $expect_max*1.01*$rep/$div+1);
             $lower = $upper;
         }
     }
+
 }

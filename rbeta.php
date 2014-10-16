@@ -6,13 +6,22 @@
 
 function rbeta($aa, $bb)
 {
+    /* cache */
+    static $olda = -1.0;
+    static $oldb = -1.0;
+    static $beta;
+    static $gamma;
+
     $a = min($aa, $bb);
     $b = max($aa, $bb); /* a <= b */
     $alpha = $a + $b;
 
-    /* とりあえず必ず初期化 */
-    $beta = sqrt(($alpha - 2.0) / (2.0 * $a * $b - $alpha));
-    $gamma = $a + 1.0 / $beta;
+    /* cache */
+    if (($olda != $aa) || ($oldb != $bb)) {
+        $beta = sqrt(($alpha - 2.0) / (2.0 * $a * $b - $alpha));
+        $gamma = $a + 1.0 / $beta;
+        $olda = $aa; $oldb = $bb;
+    }
 
 	do {
 	    $u1 = mt_rand()/mt_getrandmax();
