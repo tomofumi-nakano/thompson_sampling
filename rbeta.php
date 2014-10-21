@@ -121,3 +121,16 @@ function rbeta($aa, $bb)
 
 	return ($aa != $a) ? $b / ($b + $w) : $w / ($b + $w);
 }
+
+function rbeta_class($aa, $bb)
+{
+    static $olda = -1.0;
+    static $oldb = -1.0;
+    static $rb = false;
+
+    if (($olda != $aa) || ($oldb != $bb)) {
+        $rb = new RBeta($aa, $bb);
+        $olda = $aa; $oldb = $bb;
+    }
+    return $rb->rand();
+}
