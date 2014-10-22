@@ -12,13 +12,10 @@ function thompson($arms, $loop = 1000)
     $cpcs = [];
     $rbs = [];
     foreach ($arms as $id => $data) {
-        # $imps = $data[0];
-        # $click = $data[1];
-        # $price = $data[2];
-        $cpcs[$id] = $data[2]/$data[1]; # price/click
+        $cpcs[$id] = $data[2]/$data[1]; # $price/$click;
         $rbs[$id] = new RBeta($data[1]+1,$data[0]-$data[1]+1);
     }
-    
+
     # thompson sampling
     $ratios = array_fill(0,count($cpcs),0);
     for($i = 0; $i < $loop; $i++) {
@@ -33,7 +30,7 @@ function thompson($arms, $loop = 1000)
         }
         $ratios[$max_id]++;
     }
-    
+
     # ratio -> rate
     $sum = array_reduce($ratios, function ($s,$e) {return $s+$e;} );
     foreach ($ratios as $id => $count) {
