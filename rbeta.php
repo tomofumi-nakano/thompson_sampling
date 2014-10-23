@@ -64,6 +64,66 @@ class RBeta
 
 }
 
+class RBetaQ
+{
+    private $a;
+    private $b;
+    private $aa;
+    private $beta;
+    private $alpha;
+    private $gamma;
+    private $m;
+
+    function __construct($aaa, $bbb)
+    {
+        if ($aaa < 1 || $bbb < 1) {
+            throw new InvalidArgumentException('Arguments must be more than equal 1. a:' . $aaa.' b:' . $bbb, 10);
+        }
+        $this->aa = $aaa;
+        $this->a = min($aaa, $bbb);
+        $this->m = mt_getrandmax();
+        $this->b = max($aaa, $bbb); /* a <= b */
+        if (($aaa == 1) && ($bbb == 1)) {
+            return;
+        }
+        $this->alpha = $this->a + $this->b;
+        $this->beta = sqrt(($this->alpha - 2.0) / (2.0 * $this->a * $this->b - $this->alpha));
+        $this->gamma = $this->a + 1.0 / $this->beta;
+    }
+
+    function rand()
+    {
+        $a = $this->a; # $a はループの中の式で２度利用されているので、局所変数としてしたほうが高速
+        if (($a == 1) && ($this->b == 1)) {
+            return mt_rand()/$this->m;
+        }
+
+        do {
+            $u1 = mt_rand()/$this->m;
+            $u2 = mt_rand()/$this->m;
+
+            $r = $this->beta * log($u1 / (1.0 - $u1)); # $vは$rの後使われないので、$rとする
+            if ($r <= 709) {
+                $w = $a * exp($r);
+                if ($w == INF) {$w = 1.75e308;}
+            } else {
+                $w = 1.75e308;
+            }
+
+            $r = $this->gamma * $r - 1.3862944;
+            #$s = $a + $r - $w;
+            $z = $u1 * $u1 * $u2; # $zの式を近づけることによりキャッシュ効果
+            if (($a + $r - $w) + 2.609438 >= 5.0 * $z)
+                break;
+            $z = log($z); # $t を作らず $zを再利用
+            if (($a + $r - $w) > $z)
+                break;
+        } while ($r + $this->alpha * log($this->alpha / ($this->b + $w)) < $z);
+
+        return ($this->aa != $a) ? $this->b / ($this->b + $w) : $w / ($this->b + $w);
+    }
+}
+
 function rbeta($aa, $bb)
 {
     /* cache */
