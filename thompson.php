@@ -11,9 +11,25 @@ function thompson($arms, $loop = 1000)
     # init
     $cpcs = [];
     $rbs = [];
+    $max_cpc = 0; # クリックが0のときのため
     foreach ($arms as $id => $data) {
-        $cpcs[$id] = $data[2]/$data[1]; # $price/$click;
-        $rbs[$id] = new RBeta($data[1]+1,$data[0]-$data[1]+1);
+        if ($data[1] > 0) {
+            $cpcs[$id] = $data[2]/$data[1]; # $price/$click;
+            if ($max_cpc < $cpcs[$id]) {
+                $max_cpc = $cpcs[$id];
+            }
+        } else {
+            $cpcs[$id] = -1; # 一旦-1に指定
+        }
+        $rbs[$id] = new RBetaQ($data[1]+1,$data[0]-$data[1]+1);
+    }
+    if ($max_cpc == 0) { # 全てがクリック0のときは1に設定する
+        $max_cpc = 1.0;  # 最終的な出力結果は配信比率なので1で問題ない
+    }
+    foreach ($arms as $id => $data) { # クリックが0のとき、最大のCPCに設定する
+        if ($cpcs[$id] < 0) {
+            $cpcs[$id] = $max_cpc;
+        }
     }
 
     # thompson sampling
