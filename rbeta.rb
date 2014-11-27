@@ -41,7 +41,7 @@ class RBetaQ
       break if ((a + r - w) + 2.609438 >= 5.0 * z)
       z = Math.log(z) # tを作らずzを再利用
       break if ((a + r - w) > z)
-    end while (r + @alpha * log(@alpha / (@b + w)) < z)
+    end while (r + @alpha * Math.log(@alpha / (@b + w)) < z)
 
     return (@aa != a) ? @b / (@b + w) : w / (@b + w)
   end

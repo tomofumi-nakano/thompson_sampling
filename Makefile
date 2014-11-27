@@ -17,3 +17,6 @@ thompson-test.check: thompson.php thompson-test.php
 rbeta.rb.check: rbeta.rb rbeta-test.rb
 	ruby -I . -d rbeta-test.rb
 	touch rbeta.rb.check
+
+rbeta.rb.speed.check: rbeta.rb rbeta-test-speed.rb
+	ruby -I . -d rbeta-test-speed.rb
