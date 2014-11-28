@@ -20,3 +20,7 @@ rbeta.rb.check: rbeta.rb rbeta-test.rb
 
 rbeta.rb.speed.check: rbeta.rb rbeta-test-speed.rb
 	ruby -I . -d rbeta-test-speed.rb
+
+thompson.rb.check: thompson.rb thompson-test.rb
+	ruby -I . -d thompson-test.rb
+
