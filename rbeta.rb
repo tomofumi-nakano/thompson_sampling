@@ -1,9 +1,14 @@
 #! /usr/bin/ruby -Ku
 # -*- coding: utf-8 -*-
 
+# ベータ分布の乱数生成
 class RBetaQ
   MAX_LOG = Math.log(Float::MAX)
   INF = 1.0/0.0
+
+  # 初期化
+  # @param [Fixnum] aaa ベータ分布のα
+  # @param [Fixnum] bbb ベータ分布のβ
   def initialize(aaa, bbb)
     if (aaa < 1 || bbb < 1)
       raise("Arguments must be more than equal 1. a: #{aaa}, b: #{bbb}");
@@ -17,6 +22,8 @@ class RBetaQ
     @gamma = @a + 1.0 / @beta
   end
 
+  # ベータ分布の乱数を生成する
+  # @return [Float] 乱数 (0.0から1.0)
   def rand()
     a = @a # a はループの中の式で２度利用されているので、局所変数としてしたほうが高速(phpでは)
     if a == 1 && @b == 1
