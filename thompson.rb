@@ -4,9 +4,9 @@
 require 'rbeta.rb'
 
 # thompson sampling
-# @param [Array] arms [imps, click, price]
+# @param [Array] arms [[imps, click, price]]
 # @param [Fixnum] loop 繰り返し回数
-# @return [Array] ratio 配信比率
+# @return [Array] ratio_list 配信比率 [[ratio]]
 def thompson(arms, loop = 1000)
   # cpc の決定と rbeta 初期化
   cpcs = []
@@ -48,9 +48,8 @@ def thompson(arms, loop = 1000)
   end # for
 
   # ratio -> rate
-  sum = ratio.reduce(:+)
   ratio.each.with_index do |count, id|
-    ratio[id] = count.to_f/sum
+    ratio[id] = count.to_f/loop
   end
   return ratio
 end
